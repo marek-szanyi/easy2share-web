@@ -1,0 +1,185 @@
+.share-page {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: clamp(1.25rem, 5vw, 4rem);
+  box-sizing: border-box;
+}
+
+.share-panel {
+  width: min(100%, 72rem);
+}
+
+.share-panel h1 {
+  width: fit-content;
+  margin: 0 0 clamp(2rem, 6vw, 5rem);
+  padding: 0.04em 0.12em 0.12em;
+  color: var(--ink, #111111);
+  background: var(--paper, #fffdf5);
+  border: 5px solid var(--ink, #111111);
+  box-shadow: 12px 12px 0 var(--ink, #111111);
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  font-size: clamp(3.3rem, 11vw, 9rem);
+  line-height: 0.9;
+  letter-spacing: -0.08em;
+  text-transform: lowercase;
+}
+
+.connection-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+}
+
+.connection-form input,
+.connection-form button {
+  min-height: 5rem;
+  box-sizing: border-box;
+  border: 4px solid var(--ink, #111111);
+  border-radius: 0;
+  color: var(--ink, #111111);
+  font: 800 clamp(1rem, 2vw, 1.35rem)/1 var(--body-font, 'Arial Black', Arial, Helvetica, sans-serif);
+}
+
+.connection-form input {
+  min-width: 0;
+  padding: 1.25rem 1.5rem;
+  background: var(--paper, #fffdf5);
+  box-shadow: 8px 8px 0 var(--ink, #111111);
+  outline: none;
+}
+
+.connection-form input::placeholder {
+  color: #5d5d5d;
+  opacity: 1;
+}
+
+.connection-form button {
+  padding: 1.25rem 2rem;
+  background: var(--hazard-yellow, #FFD600FF);
+  box-shadow: 8px 8px 0 var(--ink, #111111);
+  cursor: pointer;
+  transition: transform 100ms ease, box-shadow 100ms ease;
+}
+
+.connection-form button:hover:not(:disabled) {
+  transform: translate(4px, 4px);
+  box-shadow: 4px 4px 0 var(--ink, #111111);
+}
+
+.connection-form button:active:not(:disabled) {
+  transform: translate(8px, 8px);
+  box-shadow: 0 0 0 var(--ink, #111111);
+}
+
+.connection-form button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.connection-form button[aria-busy='true'] {
+  cursor: wait;
+}
+
+.connection-form input:focus-visible,
+.connection-form button:focus-visible {
+  outline: 4px solid var(--focus, #006cff);
+  outline-offset: 5px;
+}
+
+.error-message {
+  margin: 1.75rem 0 0;
+  padding: 1rem;
+  border: 4px solid var(--ink, #111111);
+  background: #ff6b6b;
+  font: 800 1rem/1.35 var(--body-font, 'Arial Black', Arial, Helvetica, sans-serif);
+}
+
+.key-dialog {
+  width: min(calc(100% - 2.5rem), 28rem);
+  padding: clamp(1.25rem, 5vw, 2rem);
+  border: 5px solid var(--ink, #111111);
+  border-radius: 0;
+  color: var(--ink, #111111);
+  background: var(--paper, #fffdf5);
+  box-shadow: 12px 12px 0 var(--ink, #111111);
+  text-align: center;
+}
+
+.key-dialog::backdrop {
+  background: rgb(17 17 17 / 72%);
+}
+
+.key-dialog h2 {
+  margin: 0 0 1.25rem;
+  font: 800 clamp(1.4rem, 5vw, 2rem)/1 var(--body-font, 'Arial Black', Arial, Helvetica, sans-serif);
+}
+
+.key-dialog img {
+  display: block;
+  width: 100%;
+  max-width: 20rem;
+  height: auto;
+  margin: 0 auto 1.5rem;
+  border: 4px solid var(--ink, #111111);
+  image-rendering: pixelated;
+}
+
+.key-dialog button {
+  width: 100%;
+  min-height: 4.5rem;
+  padding: 1rem 1.5rem;
+  border: 4px solid var(--ink, #111111);
+  border-radius: 0;
+  color: var(--ink, #111111);
+  background: var(--hazard-yellow, #ffd600);
+  box-shadow: 7px 7px 0 var(--ink, #111111);
+  font: 800 1.1rem/1 var(--body-font, 'Arial Black', Arial, Helvetica, sans-serif);
+  cursor: pointer;
+}
+
+.key-dialog button:hover {
+  transform: translate(3px, 3px);
+  box-shadow: 4px 4px 0 var(--ink, #111111);
+}
+
+.key-dialog button:focus-visible {
+  outline: 4px solid var(--focus, #006cff);
+  outline-offset: 4px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 40rem) {
+  .share-panel h1 {
+    border-width: 4px;
+    box-shadow: 8px 8px 0 var(--ink, #111111);
+  }
+
+  .connection-form {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .connection-form input,
+  .connection-form button {
+    width: 100%;
+    min-height: 4.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .connection-form button {
+    transition: none;
+  }
+}

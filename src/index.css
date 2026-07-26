@@ -1,0 +1,39 @@
+:root {
+  --ink: #111111;
+  --paper: #fffdf5;
+  --hazard-yellow: #FFD600FF;
+  --focus: #ff5500;
+  --display-font: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  --body-font: 'Arial Black', Arial, Helvetica, sans-serif;
+
+  font-family: var(--body-font), sans-serif;
+  color: var(--ink);
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(rgb(17 17 17 / 8%) 2px, transparent 2px),
+    linear-gradient(90deg, rgb(17 17 17 / 8%) 2px, transparent 2px);
+  background-size: 40px 40px;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  background-color: var(--paper);
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+}
+
+#root {
+  min-height: 100vh;
+}
