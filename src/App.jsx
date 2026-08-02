@@ -1,26 +1,17 @@
 import {useEffect, useRef, useState} from 'react'
 import QRCode from 'qrcode'
+import {bytesToBase64, decryptFrame, encodeRegisterFrame, generateKeyBytes} from './protocol.js'
 import './App.css'
 
 const SESSION_KEY = 'easy2share.chacha20-poly1305.key.v1'
-
-function generateKey() {
-  const keyBytes  = crypto.getRandomValues(new Uint8Array(32))
-  //console.log(asBase64)
-  return keyBytes.toBase64()
-  // return btoa(String.fromCharCode(...keyBytes))
-  //   .replaceAll('+', '-')
-  //   .replaceAll('/', '_')
-  //   .replace(/=+$/, '')
-}
+const CLIENT_NAME = 'easy2share-web'
 
 function getWebSocketUrl(address) {
   const trimmedAddress = address.trim()
   const hasProtocol = /^(?:https?|wss?):\/\//i.test(trimmedAddress)
-  const defaultProtocol = window.location.protocol === 'wss:'
-  const url = new URL(hasProtocol ? trimmedAddress : `${defaultProtocol}://${trimmedAddress}`)
+  const url = new URL(hasProtocol ? trimmedAddress : `ws://${trimmedAddress}`)
 
-  url.protocol = 'wss:'
+  url.protocol = 'ws:'
   url.port = '8080'
   url.pathname = '/notify'
   url.search = ''
@@ -34,6 +25,7 @@ function App() {
   const dialogRef = useRef(null)
   const mobileAddressInputRef = useRef(null)
   const socketRef = useRef(null)
+  const keyBytesRef = useRef(null)
   const [mobileAddress, setMobileAddress] = useState('')
   const [qrCode, setQrCode] = useState('')
   const [error, setError] = useState('')
@@ -53,7 +45,8 @@ function App() {
     setIsGenerating(true)
 
     try {
-      const key = generateKey()
+      const keyBytes = generateKeyBytes()
+      const key = bytesToBase64(keyBytes)
       const qrDataUrl = await QRCode.toDataURL(key, {
         width: 320,
         margin: 2,
@@ -64,6 +57,7 @@ function App() {
         },
       })
 
+      keyBytesRef.current = keyBytes
       sessionStorage.setItem(SESSION_KEY, key)
       setQrCode(qrDataUrl)
       dialogRef.current?.showModal()
@@ -80,27 +74,68 @@ function App() {
     setError('')
     setConnectionStatus('connecting')
 
+    let keyBytes = keyBytesRef.current
+    if (!keyBytes) {
+      const storedKey = sessionStorage.getItem(SESSION_KEY)
+      if (storedKey) {
+        const bin = atob(storedKey)
+        keyBytes = Uint8Array.from(bin, (ch) => ch.charCodeAt(0))
+        keyBytesRef.current = keyBytes
+      }
+    }
+    if (!keyBytes) {
+      setConnectionStatus('idle')
+      setError('ENCRYPTION KEY MISSING. GENERATE A NEW ONE.')
+      return
+    }
+
     try {
       const socket = new WebSocket(getWebSocketUrl(mobileAddress))
+      socket.binaryType = 'arraybuffer'
       socketRef.current = socket
       let hasConnected = false
+      let handshakeFailed = false
 
       socket.addEventListener('open', () => {
         if (socketRef.current !== socket) return
 
-        hasConnected = true
-        setConnectionStatus('connected')
-        dialogRef.current?.close()
+        socket.send(encodeRegisterFrame(keyBytes, CLIENT_NAME))
+      })
+
+      socket.addEventListener('message', (event) => {
+        if (socketRef.current !== socket || hasConnected) return
+
+        try {
+          const response = decryptFrame(keyBytes, new Uint8Array(event.data))
+          if (response?.isOk === true) {
+            hasConnected = true
+            setConnectionStatus('connected')
+            dialogRef.current?.close()
+          } else {
+            handshakeFailed = true
+            setError(`MOBILE DEVICE REJECTED THE CONNECTION${response?.message ? `: ${String(response.message).toUpperCase()}` : '.'}`)
+            socket.close()
+          }
+        } catch {
+          handshakeFailed = true
+          setError('COULD NOT DECRYPT SERVER RESPONSE. CHECK THE KEY AND TRY AGAIN.')
+          socket.close()
+        }
       })
 
       socket.addEventListener('close', () => {
         if (socketRef.current !== socket) return
 
         socketRef.current = null
-        setConnectionStatus('idle')
-        setError(hasConnected
-          ? 'CONNECTION TO MOBILE DEVICE CLOSED.'
-          : 'COULD NOT CONNECT TO MOBILE DEVICE. TRY AGAIN.')
+        if (hasConnected) {
+          setConnectionStatus('idle')
+          setError('CONNECTION TO MOBILE DEVICE CLOSED.')
+        } else {
+          setConnectionStatus('idle')
+          if (!handshakeFailed) {
+            setError('COULD NOT CONNECT TO MOBILE DEVICE. TRY AGAIN.')
+          }
+        }
       })
 
       socket.addEventListener('error', () => {
