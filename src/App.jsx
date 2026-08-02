@@ -74,7 +74,15 @@ function App() {
     setError('')
     setConnectionStatus('connecting')
 
-    const keyBytes = keyBytesRef.current
+    let keyBytes = keyBytesRef.current
+    if (!keyBytes) {
+      const storedKey = sessionStorage.getItem(SESSION_KEY)
+      if (storedKey) {
+        const bin = atob(storedKey)
+        keyBytes = Uint8Array.from(bin, (ch) => ch.charCodeAt(0))
+        keyBytesRef.current = keyBytes
+      }
+    }
     if (!keyBytes) {
       setConnectionStatus('idle')
       setError('ENCRYPTION KEY MISSING. GENERATE A NEW ONE.')
