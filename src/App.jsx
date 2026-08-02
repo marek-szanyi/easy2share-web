@@ -29,6 +29,7 @@ function App() {
   const [mobileAddress, setMobileAddress] = useState('')
   const [qrCode, setQrCode] = useState('')
   const [error, setError] = useState('')
+  const [clipboardContent, setClipboardContent] = useState('')
   const [isGenerating, setIsGenerating] = useState(false)
   const [connectionStatus, setConnectionStatus] = useState('idle')
 
@@ -43,6 +44,7 @@ function App() {
 
     setError('')
     setIsGenerating(true)
+    setClipboardContent('')
 
     try {
       const keyBytes = generateKeyBytes()
@@ -103,20 +105,30 @@ function App() {
       })
 
       socket.addEventListener('message', (event) => {
-        if (socketRef.current !== socket || hasConnected) return
+        if (socketRef.current !== socket) return
 
         try {
           const response = decryptFrame(keyBytes, new Uint8Array(event.data))
-          if (response?.isOk === true) {
-            hasConnected = true
-            setConnectionStatus('connected')
-            dialogRef.current?.close()
-          } else {
-            handshakeFailed = true
-            setError(`MOBILE DEVICE REJECTED THE CONNECTION${response?.message ? `: ${String(response.message).toUpperCase()}` : '.'}`)
-            socket.close()
+          if (!hasConnected) {
+            if (response?.isOk === true) {
+              hasConnected = true
+              setConnectionStatus('connected')
+              dialogRef.current?.close()
+            } else {
+              handshakeFailed = true
+              setError(`MOBILE DEVICE REJECTED THE CONNECTION${response?.message ? `: ${String(response.message).toUpperCase()}` : '.'}`)
+              socket.close()
+              return
+            }
           }
+
+          if (response?.clipboard !== undefined) {
+            setClipboardContent(response.clipboard)
+          }
+
         } catch {
+          if (hasConnected) return
+
           handshakeFailed = true
           setError('COULD NOT DECRYPT SERVER RESPONSE. CHECK THE KEY AND TRY AGAIN.')
           socket.close()
@@ -157,6 +169,7 @@ function App() {
     requestAnimationFrame(() => mobileAddressInputRef.current?.focus())
   }
 
+
   return (
     <main className="share-page">
       <section
@@ -172,6 +185,8 @@ function App() {
               <textarea
                 aria-label="Shared clipboard"
                 placeholder="TYPE OR PASTE TEXT HERE…"
+                value={clipboardContent}
+                onChange={(event) => setClipboardContent(event.target.value)}
               />
             </section>
 
