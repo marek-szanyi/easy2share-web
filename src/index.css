@@ -1,39 +1,56 @@
-:root {
-  --ink: #111111;
-  --paper: #fffdf5;
-  --hazard-yellow: #FFD600FF;
-  --focus: #ff5500;
-  --display-font: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-  --body-font: 'Arial Black', Arial, Helvetica, sans-serif;
+/* Copyright (c) Marek Szanyi. See LICENSE.md. */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 
-  font-family: var(--body-font), sans-serif;
-  color: var(--ink);
-  background-color: var(--paper);
-  background-image:
-    linear-gradient(rgb(17 17 17 / 8%) 2px, transparent 2px),
+.outfit-title {
+    font-family: "Outfit", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+}
+
+.outfit-content-title {
+    font-family: "Outfit", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-optical-sizing: auto;
+}
+
+
+:root {
+    --ink: #111111;
+    --paper: #fffdf5;
+    --hazard-yellow: #FFD600FF;
+    --focus: #ff5500;
+    --display-font: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    --body-font: 'Arial Black', Arial, Helvetica, sans-serif;
+
+    font-family: var(--body-font), sans-serif;
+    color: var(--ink);
+    background-color: var(--paper);
+    background-image: linear-gradient(rgb(17 17 17 / 8%) 2px, transparent 2px),
     linear-gradient(90deg, rgb(17 17 17 / 8%) 2px, transparent 2px);
-  background-size: 40px 40px;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    background-size: 40px 40px;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 html {
-  min-width: 320px;
-  background-color: var(--paper);
+    min-width: 320px;
+    background-color: var(--paper);
 }
 
 body {
-  min-width: 320px;
-  min-height: 100vh;
-  margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+    margin: 0;
 }
 
 #root {
-  min-height: 100vh;
+    min-height: 100vh;
 }

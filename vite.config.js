@@ -1,3 +1,4 @@
+// Copyright (c) Marek Szanyi. See LICENSE.md.
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 

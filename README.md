@@ -1,16 +1,180 @@
-# React + Vite
+# easy2share web client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE.md)
+[![React](https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=white)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-8-646cff?logo=vite&logoColor=white)](https://vite.dev/)
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Web client for **easy2share**: Seamlessly share clipboard content and files from your mobile device. Everything stays local—no cloud relay, no account, and no reused passwords—while remaining secure enough to safely share sensitive information, including passwords
 
-## React Compiler
+## Table of contents
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- [Why this exists](#why-this-exists)
+- [Features](#features)
+- [Usage](#usage)
+- [Security model](#security-model)
+- [Getting started](#getting-started)
+- [Available scripts](#available-scripts)
+- [Project structure](#project-structure)
+- [Testing](#testing)
+- [Roadmap](#roadmap)
+- [Contributing](#contributing)
+- [Code of conduct](#code-of-conduct)
+- [Security reporting](#security-reporting)
+- [License](#license)
 
-## Expanding the ESLint configuration
+## Why this exists
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+easy2share-web exists because I wanted to share stuff between my phone and workstation(s). I wanted something that would
+work out of the box, without cloud, account registration, or client installation. All existing solutions I have found 
+either allowed only file sharing or required an account for their cloud service, or security wasn't good enough.
+
+Easy2Share requires no account and no cloud relay. Works on local network, and it allows you to share your phone 
+clipboard and files with any device that can run a web browser.... it's also free & open source.
+
+## Features
+
+- Direct mobile-to-device connection
+- Authenticated encryption for all data in transit
+- QR-based key handoff for fast pairing
+- Compact binary protocol frames using **CBOR**
+- Clipboard sharing
+- File sharing (coming soon)
+
+
+## Usage
+
+1. Open the mobile easy2share app and note the address it shows.
+2. Enter that address in easy2share-web and press **CONNECT**.
+3. Scan the generated QR code with the mobile app; it contains the session key.
+4. Press **CONTINUE** to finish the encrypted handshake.
+5. Exchange clipboard content in the shared workspace.
+6. Reset by clicking the `easy2share` title to close the connection and clear the session key.
+
+
+## Security model
+
+easy2share-web is designed to reduce credential reuse and unnecessary data transit:
+
+- **Encryption key per session:** a new 256-bit key is generated for each connection.
+- **Authenticated encryption:** protocol frames are encrypted and integrity-protected.
+- **Different channel for key delivery:** the key is delivered from the browser to the phone via QR code.
+
+
+> The web client shall always be loaded from a trusted source (HTTPS) and the QR code shall be scanned in person. The session key is never transmitted over the network.
+
+> The official trusted source for the webapp is https://getshared.link 
+
+
+## Getting started
+
+### Prerequisites
+
+- Node.js 20+
+- npm 10+
+
+### Installation
+
+```bash
+npm install
+```
+
+### Run in development
+
+```bash
+npm run dev
+```
+
+Then open the local URL printed by Vite.
+
+### Production build
+
+```bash
+npm run build
+```
+
+### Preview production build
+
+```bash
+npm run preview
+```
+
+## Available scripts
+
+| Script | Description |
+|---|---|
+| `npm run dev` | Start the Vite development server |
+| `npm run build` | Build production assets |
+| `npm run preview` | Preview the production build locally |
+| `npm run lint` | Run ESLint |
+| `node --test test/protocol.test.mjs` | Run protocol contract tests |
+
+## Project structure
+
+```text
+src/
+  App.jsx            # Main UI and connection flow
+  App.css            # App-specific styling
+  AboutScreen.jsx    # Tutorial + security guidance screen
+  index.css          # Global styles and font setup
+  main.jsx           # React entry point
+  protocol.js        # Key generation, frame encrypt/decrypt, register frame
+test/
+  protocol.test.mjs  # End-to-end protocol contract tests
+public/
+  favicon.svg
+LICENSE.md
+README.md
+```
+
+## Testing
+
+The repository includes protocol coverage that validates the CBOR envelope format, base64 encoding, and a mock WebSocket round trip.
+
+Run the tests with:
+
+```bash
+node --test test/protocol.test.mjs
+```
+
+For broader verification, run:
+
+```bash
+npm run lint
+npm run build
+```
+
+## Roadmap
+
+- [ ] Add the shared file transfer flow to the web UI
+- [ ] Add stronger protocol/session observability in the interface
+- [ ] Add a CI workflow for lint + tests
+
+
+## Contributing
+
+Contributions are welcome.
+
+1. Fork the repository.
+2. Create a feature branch.
+3. Make changes with clear commit messages.
+4. Run lint and tests locally.
+5. Open a pull request with context and rationale.
+
+If you add new behavior, include tests where practical and keep the protocol contract consistent.
+
+## Code of conduct
+
+Please keep discussions respectful, constructive, and inclusive. Harassment and abusive behavior are not acceptable.
+
+## Security reporting
+
+If you discover a security issue, please report it privately:
+
+- Email: [marek@memdump.sk](mailto:marek@memdump.sk)
+
+Please avoid opening public issues for vulnerabilities until a fix is available.
+
+## License
+
+Distributed under the MIT License. See [LICENSE.md](./LICENSE.md).
