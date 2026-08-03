@@ -67,5 +67,5 @@ jobs:
           server: getsharing.link
           username: ${{ vars.DEPLOYLOGIN }}
           password: ${{ secrets.DEPLOYPSWD }}
-          protocol: ftps
+          protocol: ftp
           local-dir: ./dist/
