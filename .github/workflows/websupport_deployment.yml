@@ -62,10 +62,13 @@ jobs:
         run: npm run build
 
       - name: Deploy website over SFTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.6
         with:
           server: getsharing.link
           username: ${{ vars.DEPLOYLOGIN }}
           password: ${{ secrets.DEPLOYPSWD }}
-          protocol: sftp
-          local-dir: ./dist/
+          ssh_private_key: ""
+          port: 22
+          local_path: ./dist/*
+          remote_path: /
+          sftp_only: true
