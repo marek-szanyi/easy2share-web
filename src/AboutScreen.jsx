@@ -4,41 +4,41 @@ export function AboutScreen() {
     return (<article className="about-screen" aria-labelledby="about-title">
         <header className="about-intro">
             <p className="section-kicker">ABOUT</p>
-            <h2 id="about-title">Share directly. Keep control.</h2>
+            <h2 id="about-title">easy. <br/> direct. secure.<br/> sharing</h2>
             <p>
-                easy2share connects this browser directly to your mobile device and
-                protects protocol messages with a key created for your session.
+                With any device capable of running a web browser.
             </p>
         </header>
 
         <section className="about-section" aria-labelledby="tutorial-title">
-            <h3 id="tutorial-title">Tutorial</h3>
+            <h3 id="tutorial-title">How to use</h3>
             <ol className="tutorial-steps">
                 <li>
                     <strong>Open the mobile app.</strong>
-                    <span>Keep both devices on the same trusted network and note the address shown by the app.</span>
+                    <span>Note the (IP) address shown by the app.</span>
                 </li>
-                <li>
-                    <strong>Enter the address.</strong>
-                    <span>Type the mobile app&apos;s address into the field on the easy2share home screen.</span>
+                <li className="tutorial-step-web">
+                    <strong>Load the client</strong>
+                    <span>Load the web app. client from a trusted source.</span>
+                    <span>The official trusted source is <a className="about-link outfit-content-title" href="https://getsharing.link">getsharing.link</a></span>
                 </li>
-                <li>
+                <li className="tutorial-step-web">
                     <strong>Create a secure session.</strong>
-                    <span>Select CONNECT. This browser creates a fresh encryption key and displays it as a QR code.</span>
+                    <span>Select CONNECT. Each time a new session key is generated and displayed as a QR code.</span>
                 </li>
                 <li>
                     <strong>Scan the QR code.</strong>
-                    <span>Use the mobile app to scan it. Keep the code private because it contains the session key.</span>
+                    <span>Use the mobile app to scan the QR code. Start accepting connections from other devices by selecting START SHARING.</span>
                 </li>
-                <li>
-                    <strong>Finish connecting.</strong>
+                <li className="tutorial-step-web">
+                    <strong>Establish Connection</strong>
                     <span>Select CONTINUE and wait for the mobile device to approve the encrypted connection.</span>
                 </li>
                 <li>
-                    <strong>Use the shared workspace.</strong>
-                    <span>Clipboard text received from your mobile device appears in the Clipboard panel.</span>
+                    <strong>Share clipboard</strong>
+                    <span>In the mobile app select "Share Clipboard". It will copy the phone clipboard content to the webapp.</span>
                 </li>
-                <li>
+                <li className="tutorial-step-web">
                     <strong>End the session.</strong>
                     <span>Select the easy2share title to disconnect, erase the session key, and return to a clean start.</span>
                 </li>
@@ -46,28 +46,26 @@ export function AboutScreen() {
         </section>
 
         <section className="about-section" aria-labelledby="security-title">
-            <h3 id="security-title">Why is easy2share more secure?</h3>
+            <h3 id="security-title">Is it Safe?</h3>
             <p className="section-summary">
-                Unlike sharing tools that depend on a reusable password or upload content to a cloud relay,
-                easy2share is designed to reduce how far your data and credentials travel.
+                Absolutely! You can share any sensitive data from your Phone to your other device(s). Here are a few things that together
+                ensure the safety of your data.
             </p>
             <div className="security-grid">
                 <article>
                     <span aria-hidden="true">01</span>
-                    <h4>Direct connection</h4>
-                    <p>The web app connects to the address shown by your phone instead of an easy2share cloud
-                        account.</p>
+                    <h4>Trusted Source</h4>
+                    <p>The web app. must be loaded from a trusted source such as <a className="about-link outfit-content-title" href="https://getsharing.link">getsharing.link</a> </p>
                 </article>
                 <article>
                     <span aria-hidden="true">02</span>
-                    <h4>Fresh 256-bit key</h4>
-                    <p>A cryptographically random key is generated in your browser for the session—there is no
-                        password to reuse.</p>
+                    <h4>Direct Link</h4>
+                    <p>The web app. runs in your browser and it directly connects to your mobile phone. There is no other service involved in data transfer. </p>
                 </article>
                 <article>
                     <span aria-hidden="true">03</span>
                     <h4>Authenticated encryption</h4>
-                    <p>ChaCha20-Poly1305 encrypts messages and detects modification before the app accepts them.</p>
+                    <p>All data in transit is encrypted using ChaCha20-Poly1305. Together with controls <span className="article-ref">01</span> and <span className="article-ref">04</span>, this makes the solution resistant to man-in-the-middle attacks.</p>
                 </article>
                 <article>
                     <span aria-hidden="true">04</span>
@@ -83,11 +81,9 @@ export function AboutScreen() {
                 </article>
             </div>
             <aside className="security-note" aria-labelledby="security-note-title">
-                <h4 id="security-note-title">Use it safely</h4>
+                <h4 id="security-note-title">Warning!</h4>
                 <p>
-                    Message encryption does not replace network security. Use a trusted network, verify the mobile
-                    address,
-                    do not share the QR code, and reset the app when you finish.
+                    Do not share the QR code with anyone and ensure that no one can photograph it while you are scanning it..
                 </p>
             </aside>
         </section>

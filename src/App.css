@@ -200,7 +200,7 @@
 .about-intro h2,
 .about-section h3 {
     margin: 0;
-    font-family: var(--body-font, 'Arial Black', Arial, Helvetica, sans-serif);
+    font-family: var(--body-font, 'Arial Black', Arial, Helvetica, sans-serif), serif;
     line-height: 1;
     text-transform: uppercase;
 }
@@ -252,6 +252,10 @@
     counter-increment: tutorial-step;
 }
 
+.tutorial-step-web {
+    background: var(--paper-grey, #cccac4) !important;
+}
+
 .tutorial-steps li::before {
     position: absolute;
     top: 1.25rem;
@@ -280,7 +284,7 @@
 }
 
 .section-summary {
-    max-width: 58rem;
+
     margin: 0 0 1.5rem;
     font-size: 1.1rem;
     font-weight: 700;
@@ -312,6 +316,13 @@
     font: 800 0.9rem/1 var(--body-font, 'Arial Black', Arial, Helvetica, sans-serif);
 }
 
+.article-ref {
+    display: inline-block;
+    padding: 0.35rem 0.5rem;
+    background: var(--hazard-yellow, #ffd600);
+    font: 800 0.9rem/1 var(--body-font, 'Arial Black', Arial, Helvetica, sans-serif);
+}
+
 .security-grid h4,
 .security-note h4 {
     margin: 0 0 0.65rem;
@@ -325,7 +336,7 @@
 }
 
 .security-note {
-    margin-top: 1.5rem;
+    margin-top: 5.0rem;
     padding: 1.4rem;
     border: 4px solid var(--ink, #111111);
     background: #ffad8f;
@@ -531,6 +542,13 @@
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border: 0;
+}
+
+.about-link {
+    color: var(--focus, #FF5500);
+    text-decoration: none;
+    font-weight: bolder;
+    font-size: 1.0rem;
 }
 
 @media (max-width: 40rem) {

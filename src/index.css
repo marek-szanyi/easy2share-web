@@ -19,6 +19,7 @@
 :root {
     --ink: #111111;
     --paper: #fffdf5;
+    --paper-grey: #cccac4;
     --hazard-yellow: #FFD600FF;
     --focus: #ff5500;
     --display-font: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
