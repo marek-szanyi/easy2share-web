@@ -6,7 +6,7 @@ export function PrivacyPolicyScreen() {
         <h2 id="privacy-policy-title">Privacy Policy</h2>
         <div className="privacy-policy-content">
             <p>
-                The mobile application or its web client, available from <a href="https://www.getsharing.link">getsharing.link</a>, does not collect or
+                The mobile application or its web client, available from <a href="https://getsharing.link">getsharing.link</a>, does not collect or
                 store personal data.
             </p>
             <p>
