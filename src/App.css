@@ -27,6 +27,10 @@
     width: min(100%, 82rem);
 }
 
+.share-panel--privacy-policy {
+    width: min(100%, 72rem);
+}
+
 .page-header {
     margin: 0 0 clamp(2rem, 6vw, 5rem);
 }
@@ -66,6 +70,11 @@
 .share-panel h1:hover {
     border-color: var(--hazard-yellow, #006cff);
     background-color: var(--ink);
+}
+
+.share-panel--privacy-policy h1:hover {
+    border-color: var(--ink, #111111);
+    background: var(--paper, #fffdf5);
 }
 
 .share-panel h1 button:active {
@@ -181,6 +190,48 @@
 .about-screen {
     display: grid;
     gap: clamp(2rem, 5vw, 4rem);
+}
+
+.privacy-policy-screen {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.privacy-policy-screen h2 {
+    width: fit-content;
+    margin: 0;
+    padding: 0.35rem 0.6rem;
+    border: 4px solid var(--ink, #111111);
+    background: var(--hazard-yellow, #ffd600);
+    box-shadow: 7px 7px 0 var(--ink, #111111);
+    font: 800 clamp(1.8rem, 5vw, 3.5rem)/1 var(--body-font, 'Arial Black', Arial, Helvetica, sans-serif);
+    text-transform: uppercase;
+}
+
+.privacy-policy-content {
+    display: grid;
+    gap: 1.25rem;
+    margin-top: 0.75rem;
+}
+
+.privacy-policy-content p {
+    margin: 0;
+    padding: clamp(1.25rem, 4vw, 2rem);
+    border: 4px solid var(--ink, #111111);
+    background: var(--paper, #fffdf5);
+    box-shadow: 7px 7px 0 var(--ink, #111111);
+    font: 700 clamp(1rem, 2vw, 1.2rem)/1.65 Arial, Helvetica, sans-serif;
+}
+
+.privacy-policy-content a {
+    color: var(--focus, #006cff);
+    overflow-wrap: anywhere;
+    font-weight: 800;
+}
+
+.privacy-policy-content a:focus-visible {
+    outline: 4px solid var(--focus, #006cff);
+    outline-offset: 4px;
 }
 
 .about-intro {
@@ -554,6 +605,10 @@
 @media (max-width: 40rem) {
     .page-header {
         padding-top: 4.75rem;
+    }
+
+    .share-panel--privacy-policy .page-header {
+        padding-top: 0;
     }
 
     .share-panel h1 {

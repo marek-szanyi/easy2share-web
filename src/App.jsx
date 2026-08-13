@@ -4,11 +4,18 @@ import QRCode from 'qrcode'
 import {bytesToBase64, decryptFrame, encodeRegisterFrame, generateKeyBytes} from './protocol.js'
 import './App.css'
 import {AboutScreen} from "./AboutScreen.jsx";
+import {PrivacyPolicyScreen} from './PrivacyPolicyScreen.jsx'
 import {MarkGithubIcon} from '@primer/octicons-react'
 
 const SESSION_KEY = 'easy2share.chacha20-poly1305.key.v1'
 const CLIENT_NAME = 'easy2share-web'
 const CURRENT_YEAR = new Date().getFullYear()
+const PRIVACY_POLICY_PATH = '/privacy-policy'
+
+function getInitialScreen() {
+    const path = window.location.pathname.replace(/\/+$/, '') || '/'
+    return path === PRIVACY_POLICY_PATH ? 'privacy-policy' : 'app'
+}
 
 function getWebSocketUrl(address) {
     const trimmedAddress = address.trim()
@@ -37,7 +44,7 @@ function App() {
     const [clipboardContent, setClipboardContent] = useState('')
     const [isGenerating, setIsGenerating] = useState(false)
     const [connectionStatus, setConnectionStatus] = useState('idle')
-    const [currentScreen, setCurrentScreen] = useState('app')
+    const [currentScreen, setCurrentScreen] = useState(getInitialScreen)
 
     useEffect(() => () => {
         const socket = socketRef.current
@@ -215,25 +222,26 @@ function App() {
     return (<div className="app-shell">
         <main className="share-page">
             <section
-                className={`share-panel${connectionStatus === 'connected' ? ' share-panel--connected' : ''}${currentScreen === 'about' ? ' share-panel--about' : ''}`}
+                className={`share-panel${connectionStatus === 'connected' ? ' share-panel--connected' : ''}${currentScreen === 'about' ? ' share-panel--about' : ''}${currentScreen === 'privacy-policy' ? ' share-panel--privacy-policy' : ''}`}
                 aria-labelledby="page-title"
             >
                 <header className="page-header">
                     <h1 id="page-title" className="outfit-title">
-                        <button type="button" onClick={handleReset} aria-label="Reset easy2share">
-                            easy2share
-                        </button>
+                        {currentScreen === 'privacy-policy' ? 'easy2share' : (
+                            <button type="button" onClick={handleReset} aria-label="Reset easy2share">
+                                easy2share
+                            </button>)}
                     </h1>
-                    <button
+                    {currentScreen !== 'privacy-policy' && (<button
                         className="screen-nav-button"
                         type="button"
                         onClick={currentScreen === 'about' ? handleBackToApp : handleShowAbout}
                     >
                         {currentScreen === 'about' ? 'BACK TO APP' : 'ABOUT'}
-                    </button>
+                    </button>)}
                 </header>
 
-                {currentScreen === 'about' ? (<AboutScreen/>) : connectionStatus === 'connected' ? (
+                {currentScreen === 'privacy-policy' ? (<PrivacyPolicyScreen/>) : currentScreen === 'about' ? (<AboutScreen/>) : connectionStatus === 'connected' ? (
                     <div className="sharing-workspace">
                         <section className="clipboard-panel" aria-labelledby="clipboard-title">
                             <h2 id="clipboard-title">Clipboard</h2>
