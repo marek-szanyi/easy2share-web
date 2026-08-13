@@ -14,7 +14,7 @@ const PRIVACY_POLICY_PATH = '/privacy-policy'
 
 function getInitialScreen() {
     const path = window.location.pathname.replace(/\/+$/, '') || '/'
-    return path === PRIVACY_POLICY_PATH ? 'privacy-policy' : 'app'
+    return path === PRIVACY_POLICY_PATH || path.startsWith(`${PRIVACY_POLICY_PATH}/`) ? 'privacy-policy' : 'app'
 }
 
 function getWebSocketUrl(address) {
