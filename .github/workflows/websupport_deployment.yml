@@ -68,7 +68,7 @@ jobs:
         run: |
           set -eu
           while IFS= read -r directory; do
-            sshpass -p "$DEPLOY_PASSWORD" ssh -o StrictHostKeyChecking=no -p 22 "$DEPLOY_USERNAME@getsharing.link" "mkdir -p '/$directory'"
+            sshpass -p "$DEPLOY_PASSWORD" ssh -o StrictHostKeyChecking=no -p 22 "$DEPLOY_USERNAME@getsharing.link" "mkdir -p '$directory'"
           done < <(find dist -mindepth 1 -type d -printf '%P\n')
 
       - name: Deploy website over SFTP
