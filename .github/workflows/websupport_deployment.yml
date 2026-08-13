@@ -61,16 +61,6 @@ jobs:
       - name: Build website
         run: npm run build
 
-      - name: Create remote directories for static routes
-        env:
-          DEPLOY_PASSWORD: ${{ secrets.DEPLOYPSWD }}
-          DEPLOY_USERNAME: ${{ vars.DEPLOYLOGIN }}
-        run: |
-          set -eu
-          while IFS= read -r directory; do
-            sshpass -p "$DEPLOY_PASSWORD" ssh -o StrictHostKeyChecking=no -p 22 "$DEPLOY_USERNAME@getsharing.link" "mkdir -p '$directory'"
-          done < <(find dist -mindepth 1 -type d -printf '%P\n')
-
       - name: Deploy website over SFTP
         uses: wlixcc/SFTP-Deploy-Action@v1.2.6
         with:
