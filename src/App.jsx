@@ -237,7 +237,7 @@ function App() {
                             className="google-play-link"
                             href="https://play.google.com/store/apps/details?id=com.eaxor.easy2share&pcampaignid=web_share"
                             target="_blank"
-                            rel="noreferrer"
+                            rel="noopener noreferrer"
                             aria-label="Get easy2share on Google Play"
                         >
                             <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
@@ -312,7 +312,7 @@ function App() {
                     className="outfit-content-title"
                     href="https://github.com/marek-szanyi/easy2share-web"
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                     aria-label="View easy2share on GitHub"
                 >
                     <MarkGithubIcon size={24} verticalAlign="middle"/>
