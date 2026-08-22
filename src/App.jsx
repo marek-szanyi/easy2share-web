@@ -238,7 +238,7 @@ function App() {
                             href="https://play.google.com/store/apps/details?id=com.eaxor.easy2share&pcampaignid=web_share"
                             target="_blank"
                             rel="noopener noreferrer"
-                            aria-label="Get easy2share on Google Play"
+                            aria-label="Get the mobile app from Google Play"
                         >
                             <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
                                 <path d="M3 20.5v-17c0-.59.34-1.11.84-1.35L13.69 12l-9.85 9.85A1.5 1.5 0 0 1 3 20.5Zm13.81-5.38L6.05 21.34l8.49-8.49 2.27 2.27Zm3.35-4.31c.37.28.59.69.59 1.19 0 .5-.22.9-.57 1.18l-2.29 1.32-2.5-2.5 2.5-2.5 2.27 1.31ZM6.05 2.66l10.76 6.22-2.27 2.27-8.49-8.49Z"/>
