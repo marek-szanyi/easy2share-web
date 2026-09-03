@@ -1,17 +1,143 @@
 <!doctype html>
-<!-- Copyright (c) Marek Szanyi. See LICENSE.md. -->
+<!-- Copyright (c) Eaxor LLC. See LICENSE.md. -->
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
+    <link rel="canonical" href="https://getsharing.link/"/>
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml"/>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="theme-color" content="#fffdf5"/>
-    <meta name="description" content="Share clipboard or files securely from your mobile phone to your desktop."/>
-    <meta name="keywords" content="clipboard, file sharing, secure, mobile, desktop"/>
-    <meta name="author" content="Marek Szanyi"/>
-    <title>getsharing.link</title>
+    <meta name="robots" content="index,follow,max-image-preview:large"/>
+    <meta name="description"
+          content="easy2share is a secure way to share clipboard text and files from a phone to another device in a browser without cloud storage, accounts, or a relay server."/>
+    <meta name="keywords"
+          content="secure clipboard sharing, phone to desktop file transfer, local file sharing, easy2share, private clipboard sync, mobile-to-desktop sharing, phone to device, device to device"/>
+    <meta name="author" content="Eaxor LLC."/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:title" content="easy2share | Secure phone-to-desktop clipboard and file sharing"/>
+    <meta property="og:description"
+          content="Share clipboard and files directly from your phone to an another device via browser with end-to-end encrypted local sessions."/>
+    <meta property="og:url" content="https://getsharing.link/"/>
+    <meta property="og:image" content="https://getsharing.link/favicon.svg"/>
+    <meta property="og:site_name" content="easy2share"/>
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:title" content="easy2share | Secure phone-to-desktop clipboard and file sharing"/>
+    <meta name="twitter:description"
+          content="Share clipboard text and files directly from your phone to an another device via browser with end-to-end encrypted local sessions."/>
+    <title>easy2share | Secure phone-to-desktop clipboard and file sharing</title>
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "easy2share",
+            "applicationCategory": "UtilitiesApplication",
+            "operatingSystem": "Web",
+            "description": "Secure local clipboard and file sharing between a mobile device and an another device via browser with QR-based session setup and authenticated encryption.",
+            "url": "https://getsharing.link/",
+            "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD"
+            },
+            "featureList": [
+                "Clipboard sharing from phone to desktop",
+                "Secure local file transfer",
+                "QR-based key handoff",
+                "No cloud relay",
+                "ChaCha20-Poly1305 authenticated encryption"
+            ],
+            "publisher": {
+                "@type": "Organization",
+                "name": "Eaxor LLC.",
+                "url": "https://getsharing.link/"
+            }
+        }
+    </script>
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+                {
+                    "@type": "Question",
+                    "name": "What is easy2share?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "easy2share is a secure way to copy text from your phone and paste it on your computer, or send files between devices over a direct local connection without a cloud relay."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Is easy2share safe?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes. The web client and mobile app establish a local encrypted session, use a QR code to transfer the session key, and protect messages with authenticated encryption."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Does easy2share store my data in the cloud?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "No. The app works directly between the phone and the browser, and the session key is kept local. Data is not routed through a central cloud service."
+                    }
+                }
+            ]
+        }
+    </script>
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "HowTo",
+            "name": "Use easy2share securely",
+            "description": "Set up a secure local session between a phone and a browser, then share clipboard text and files without a cloud relay.",
+            "step": [
+                {
+                    "@type": "HowToStep",
+                    "position": 1,
+                    "name": "Open the mobile app",
+                    "text": "Open the easy2share app on the phone and note the address it shows."
+                },
+                {
+                    "@type": "HowToStep",
+                    "position": 2,
+                    "name": "Generate a QR code",
+                    "text": "Visit https://getsharing.link, enter the address, and create a fresh encryption key."
+                },
+                {
+                    "@type": "HowToStep",
+                    "position": 3,
+                    "name": "Scan and approve the connection",
+                    "text": "Scan the QR code with the phone and approve the encrypted connection."
+                },
+                {
+                    "@type": "HowToStep",
+                    "position": 4,
+                    "name": "Share clipboard or files",
+                    "text": "Send clipboard text and files directly over the local session."
+                }
+            ]
+        }
+    </script>
 </head>
 <body>
+<noscript>
+    <section aria-label="easy2share overview"
+             style="max-width: 52rem; margin: 2rem auto; padding: 1.5rem; border: 4px solid #111; background: #fffdf5; box-shadow: 8px 8px 0 #111; font-family: Arial, Helvetica, sans-serif; line-height: 1.6;">
+        <h1 style="margin: 0 0 1rem; font-size: clamp(2rem, 6vw, 3.5rem); line-height: 1; text-transform: lowercase;">
+            easy2share</h1>
+        <p style="margin: 0 0 1rem; font-size: 1.1rem;"><strong>Secure phone-to-desktop clipboard and file
+            sharing.</strong> Share text and files directly from your phone to your desktop browser without accounts,
+            cloud storage, or a relay service.</p>
+        <ul style="margin: 0; padding-left: 1.25rem;">
+            <li>Copy clipboard content on your phone and paste it on your computer.</li>
+            <li>Send files locally without uploading them to the internet.</li>
+            <li>Generate a new session key for each connection and scan it with the mobile app.</li>
+            <li>Keep the transfer secure with authenticated encryption and direct local networking.</li>
+        </ul>
+    </section>
+</noscript>
 <div id="root"></div>
 <script type="module" src="/src/main.jsx"></script>
 </body>

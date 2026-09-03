@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Allow: /privacy-policy
+Sitemap: https://getsharing.link/sitemap.xml

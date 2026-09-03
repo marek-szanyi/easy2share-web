@@ -1,0 +1,30 @@
+# easy2share
+
+## Overview
+
+easy2share is a secure local clipboard and file-sharing app for transferring text and files from a mobile device to another device in a browser without accounts, cloud storage, or a relay service.
+
+## How it works
+
+1. Open the easy2share mobile app on your phone.
+2. Visit https://getsharing.link in a browser on the desktop or another trusted device.
+3. Generate a secure session key and display the QR code.
+4. Scan the QR code with the mobile app.
+5. Accept the encrypted connection and then share clipboard text or files directly between the devices.
+
+## Security model
+
+- Direct device-to-device connection over a local network.
+- Fresh session key generated for each connection.
+- QR handoff transfers the session key without sending it over the internet.
+- Data is protected with authenticated encryption (ChaCha20-Poly1305).
+
+## Privacy
+
+The web client and mobile app do not collect or store personal data for clipboard or file transfers. The official web app is hosted at https://getsharing.link and the privacy policy is at https://getsharing.link/privacy-policy.
+
+## Official links
+
+- Website: https://getsharing.link/
+- Privacy policy: https://getsharing.link/privacy-policy
+- GitHub: https://github.com/marek-szanyi/easy2share
