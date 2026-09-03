@@ -492,12 +492,56 @@
 .shared-file-list {
     flex: 1;
     list-style: none;
+    overflow-y: auto;
 }
 
 .empty-file-list {
     color: #5d5d5d;
     font-family: var(--body-font, 'Arial Black', Arial, Helvetica, sans-serif), serif;
     text-align: center;
+}
+
+.shared-file {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.75rem 0;
+    border-bottom: 3px solid var(--ink, #111111);
+}
+
+.shared-file:last-child {
+    border-bottom: 0;
+}
+
+.shared-file-name {
+    overflow: hidden;
+    font-weight: 800;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.shared-file-status {
+    color: #5d5d5d;
+    font: 700 0.85rem/1.2 var(--body-font, 'Arial Black', Arial, Helvetica, sans-serif), serif;
+    letter-spacing: 0.05em;
+}
+
+.shared-file-download {
+    width: fit-content;
+    padding: 0.35rem 0.7rem;
+    border: 3px solid var(--ink, #111111);
+    color: var(--ink, #111111);
+    background: var(--hazard-yellow, #ffd600);
+    box-shadow: 4px 4px 0 var(--ink, #111111);
+    font: 800 0.85rem/1.2 var(--body-font, 'Arial Black', Arial, Helvetica, sans-serif), serif;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+}
+
+.shared-file-download:hover,
+.shared-file-download:focus-visible {
+    translate: 2px 2px;
+    box-shadow: 2px 2px 0 var(--ink, #111111);
 }
 
 .key-dialog {
