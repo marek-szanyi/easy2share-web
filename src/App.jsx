@@ -426,7 +426,7 @@ function App() {
 
         <footer className="app-footer">
             <div className="footer-content">
-                <p className="footer-copyright outfit-content-title">© {CURRENT_YEAR} Marek Szanyi</p>
+                <p className="footer-copyright outfit-content-title">© {CURRENT_YEAR} Eaxor LLC</p>
 
                 <a
                     className="outfit-content-title"
