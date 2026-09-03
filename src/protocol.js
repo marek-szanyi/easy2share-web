@@ -140,13 +140,32 @@ export function createFileTransferCollector() {
             }
         }
 
+        const parts = []
+        if (transfer.chunkCount > 0) {
+            for (let index = 0; index < transfer.chunkCount; index++) {
+                const part = transfer.chunks[index]
+                if (!(part instanceof Uint8Array)) {
+                    return {status: 'failed', fileId: transfer.fileId, fileName: transfer.fileName, error: `Missing chunk ${index}`}
+                }
+                parts.push(part)
+            }
+        } else {
+            for (const part of transfer.chunks) {
+                if (part instanceof Uint8Array) parts.push(part)
+            }
+        }
+
+        if (transfer.fileSize >= 0 && transfer.receivedBytes !== transfer.fileSize) {
+            return {status: 'failed', fileId: transfer.fileId, fileName: transfer.fileName, error: 'Transfer size mismatch'}
+        }
+
         return {
             status: 'completed',
             fileId: transfer.fileId,
             fileName: transfer.fileName,
             mimeType: transfer.mimeType,
             size: transfer.receivedBytes,
-            blob: new Blob(transfer.chunks, {type: transfer.mimeType}),
+            blob: new Blob(parts, {type: transfer.mimeType}),
         }
     }
 
