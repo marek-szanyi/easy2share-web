@@ -107,7 +107,15 @@ export function createFileTransferCollector() {
         const chunk = toBytes(message.data)
         if (!transfer || !chunk) return null
 
-        transfer.chunks.push(chunk)
+        const chunkIndex = Number(message.chunkIndex)
+        if (Number.isInteger(chunkIndex) && chunkIndex >= 0) {
+            if (transfer.chunkCount > 0 && chunkIndex >= transfer.chunkCount) return null
+            if (transfer.chunks[chunkIndex]) return null
+            transfer.chunks[chunkIndex] = chunk
+        } else {
+            transfer.chunks.push(chunk)
+        }
+
         transfer.receivedBytes += chunk.length
         return {
             status: 'progress',
