@@ -336,7 +336,7 @@ function App() {
                             <h2 id="clipboard-title">Clipboard</h2>
                             <textarea
                                 aria-label="Shared clipboard"
-                                placeholder="TYPE OR PASTE TEXT HERE…"
+                                placeholder="clipboard content will appear here"
                                 value={clipboardContent}
                                 onChange={(event) => setClipboardContent(event.target.value)}
                             />
