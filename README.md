@@ -12,6 +12,7 @@ Web client for **easy2share**: Seamlessly share clipboard content and files from
 - [Why this exists](#why-this-exists)
 - [Features](#features)
 - [Usage](#usage)
+- [Protocol](#protocol)
 - [Security model](#security-model)
 - [Getting started](#getting-started)
 - [Available scripts](#available-scripts)
@@ -39,7 +40,7 @@ clipboard and files with any device that can run a web browser.... it's also fre
 - QR-based key handoff for fast pairing
 - Compact binary protocol frames using **CBOR**
 - Clipboard sharing
-- File sharing (coming soon)
+- File sharing — files arrive in chunks and become downloadable as they complete
 
 
 ## Usage
@@ -48,9 +49,28 @@ clipboard and files with any device that can run a web browser.... it's also fre
 2. Enter that address in easy2share-web and press **CONNECT**.
 3. Scan the generated QR code with the mobile app; it contains the session key.
 4. Press **CONTINUE** to finish the encrypted handshake.
-5. Exchange clipboard content in the shared workspace.
+5. Exchange clipboard content in the shared workspace, and download files pushed from the phone in **Shared Files**.
 6. Reset by clicking the `easy2share` title to close the connection and clear the session key.
 
+
+## Protocol
+
+Every WebSocket frame is a CBOR `EncryptedMessage` whose payload is `ciphertext || tag || nonce`,
+encrypted with ChaCha20-Poly1305 under the session key. Decrypting a frame yields another CBOR
+message, routed by its shape:
+
+| Message | Distinguished by | Purpose |
+|---|---|---|
+| Handshake response | `isOk` | Result of client registration |
+| Clipboard push | `clipboard` | Text copied on the phone |
+| `fileTransferStart` | `type` | Announces `fileName`, `mimeType`, `fileSize`, `chunkCount` |
+| `fileChunk` | `type` | One 128 KB slice, carrying `chunkIndex` |
+| `fileTransferEnd` | `type` | Marks the transfer complete or failed |
+
+Each chunk is a frame of its own, encrypted with a fresh nonce. `createFileTransferCollector()`
+in `protocol.js` reassembles the chunks into a `Blob` and reports `started` / `progress` /
+`completed` / `failed` events. Because every file transfer message carries a `fileId`, several
+files may be in flight over one connection.
 
 ## Security model
 
@@ -118,7 +138,7 @@ src/
   AboutScreen.jsx    # Tutorial + security guidance screen
   index.css          # Global styles and font setup
   main.jsx           # React entry point
-  protocol.js        # Key generation, frame encrypt/decrypt, register frame
+  protocol.js        # Key generation, frame encrypt/decrypt, register frame, file chunk reassembly
 test/
   protocol.test.mjs  # End-to-end protocol contract tests
 public/
@@ -129,7 +149,7 @@ README.md
 
 ## Testing
 
-The repository includes protocol coverage that validates the CBOR envelope format, base64 encoding, and a mock WebSocket round trip.
+The repository includes protocol coverage that validates the CBOR envelope format, base64 encoding, a mock WebSocket round trip, and file transfer reassembly (including interleaved and aborted transfers).
 
 Run the tests with:
 
@@ -146,9 +166,9 @@ npm run build
 
 ## Roadmap
 
-- [ ] Add the shared file transfer flow to the web UI
 - [ ] Add stronger protocol/session observability in the interface
 - [ ] Add a CI workflow for lint + tests
+- [x] Add the shared file transfer flow to the web UI
 
 
 ## Contributing

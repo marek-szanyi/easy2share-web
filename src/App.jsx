@@ -1,7 +1,13 @@
 // Copyright (c) Marek Szanyi. See LICENSE.md.
 import {useEffect, useRef, useState} from 'react'
 import QRCode from 'qrcode'
-import {bytesToBase64, decryptFrame, encodeRegisterFrame, generateKeyBytes} from './protocol.js'
+import {
+    bytesToBase64,
+    createFileTransferCollector,
+    decryptFrame,
+    encodeRegisterFrame,
+    generateKeyBytes,
+} from './protocol.js'
 import './App.css'
 import {AboutScreen} from "./AboutScreen.jsx";
 import {PrivacyPolicyScreen} from './PrivacyPolicyScreen.jsx'
@@ -31,6 +37,20 @@ function getWebSocketUrl(address) {
     return url.toString()
 }
 
+function formatBytes(byteCount) {
+    if (!Number.isFinite(byteCount) || byteCount < 0) return ''
+
+    const units = ['B', 'KB', 'MB', 'GB']
+    let value = byteCount
+    let unitIndex = 0
+    while (value >= 1024 && unitIndex < units.length - 1) {
+        value /= 1024
+        unitIndex += 1
+    }
+
+    return `${unitIndex === 0 ? value : value.toFixed(1)} ${units[unitIndex]}`
+}
+
 
 function App() {
     const dialogRef = useRef(null)
@@ -38,10 +58,13 @@ function App() {
     const socketRef = useRef(null)
     const keyBytesRef = useRef(null)
     const keyGenerationRef = useRef(0)
+    const fileCollectorRef = useRef(null)
+    const objectUrlsRef = useRef([])
     const [mobileAddress, setMobileAddress] = useState('')
     const [qrCode, setQrCode] = useState('')
     const [error, setError] = useState('')
     const [clipboardContent, setClipboardContent] = useState('')
+    const [sharedFiles, setSharedFiles] = useState([])
     const [isGenerating, setIsGenerating] = useState(false)
     const [connectionStatus, setConnectionStatus] = useState('idle')
     const [currentScreen, setCurrentScreen] = useState(getInitialScreen)
@@ -50,7 +73,51 @@ function App() {
         const socket = socketRef.current
         socketRef.current = null
         socket?.close()
+        for (const url of objectUrlsRef.current) URL.revokeObjectURL(url)
+        objectUrlsRef.current = []
     }, [])
+
+    // Drops received files and the memory their download links hold on to.
+    function clearSharedFiles() {
+        fileCollectorRef.current?.reset()
+        for (const url of objectUrlsRef.current) URL.revokeObjectURL(url)
+        objectUrlsRef.current = []
+        setSharedFiles([])
+    }
+
+    function applyFileEvent(fileEvent) {
+        if (fileEvent.status === 'started') {
+            setSharedFiles((files) => [
+                ...files,
+                {
+                    id: fileEvent.fileId,
+                    name: fileEvent.fileName,
+                    size: fileEvent.fileSize,
+                    receivedBytes: 0,
+                    status: 'receiving',
+                    url: '',
+                    error: '',
+                },
+            ])
+            return
+        }
+
+        if (fileEvent.status === 'completed') {
+            const url = URL.createObjectURL(fileEvent.blob)
+            objectUrlsRef.current.push(url)
+            setSharedFiles((files) => files.map((file) => (file.id === fileEvent.fileId
+                ? {...file, status: 'ready', size: fileEvent.size, receivedBytes: fileEvent.size, url}
+                : file)))
+            return
+        }
+
+        setSharedFiles((files) => files.map((file) => {
+            if (file.id !== fileEvent.fileId) return file
+            return fileEvent.status === 'failed'
+                ? {...file, status: 'failed', error: fileEvent.error}
+                : {...file, receivedBytes: fileEvent.receivedBytes}
+        }))
+    }
 
     async function handleConnect() {
         if (!mobileAddress.trim()) return
@@ -59,6 +126,7 @@ function App() {
         setError('')
         setIsGenerating(true)
         setClipboardContent('')
+        clearSharedFiles()
 
         try {
             const keyBytes = generateKeyBytes()
@@ -111,6 +179,7 @@ function App() {
             const socket = new WebSocket(getWebSocketUrl(mobileAddress))
             socket.binaryType = 'arraybuffer'
             socketRef.current = socket
+            fileCollectorRef.current = createFileTransferCollector()
             let hasConnected = false
             let handshakeFailed = false
 
@@ -140,6 +209,11 @@ function App() {
 
                     if (response?.clipboard !== undefined) {
                         setClipboardContent(response.clipboard)
+                    }
+
+                    const fileEvent = fileCollectorRef.current?.handle(response)
+                    if (fileEvent) {
+                        applyFileEvent(fileEvent)
                     }
 
                 } catch {
@@ -199,6 +273,7 @@ function App() {
         setQrCode('')
         setError('')
         setClipboardContent('')
+        clearSharedFiles()
         setIsGenerating(false)
         setConnectionStatus('idle')
         setCurrentScreen('app')
@@ -261,7 +336,7 @@ function App() {
                             <h2 id="clipboard-title">Clipboard</h2>
                             <textarea
                                 aria-label="Shared clipboard"
-                                placeholder="TYPE OR PASTE TEXT HERE…"
+                                placeholder="clipboard content will appear here"
                                 value={clipboardContent}
                                 onChange={(event) => setClipboardContent(event.target.value)}
                             />
@@ -270,7 +345,31 @@ function App() {
                         <section className="files-panel" aria-labelledby="shared-files-title">
                             <h2 id="shared-files-title">Shared Files</h2>
                             <ul className="shared-file-list">
-                                <li className="empty-file-list">NO FILES SHARED YET</li>
+                                {sharedFiles.length === 0 ? (
+                                    <li className="empty-file-list">NO FILES SHARED YET</li>
+                                ) : (sharedFiles.map((file) => (
+                                    <li key={file.id} className="shared-file">
+                                        <span className="shared-file-name" title={file.name}>{file.name}</span>
+                                        {file.status === 'ready' ? (
+                                            <a
+                                                className="shared-file-download"
+                                                href={file.url}
+                                                download={file.name}
+                                            >
+                                                DOWNLOAD{file.size >= 0 ? ` · ${formatBytes(file.size)}` : ''}
+                                            </a>
+                                        ) : file.status === 'failed' ? (
+                                            <span className="shared-file-status" role="alert">
+                                                FAILED: {String(file.error).toUpperCase()}
+                                            </span>
+                                        ) : (
+                                            <span className="shared-file-status">
+                                                RECEIVING… {formatBytes(file.receivedBytes)}
+                                                {file.size > 0 ? ` / ${formatBytes(file.size)}` : ''}
+                                            </span>
+                                        )}
+                                    </li>
+                                )))}
                             </ul>
                         </section>
                     </div>) : (<div className="connection-form">
