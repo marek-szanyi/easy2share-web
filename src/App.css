@@ -311,6 +311,16 @@
     font: 700 clamp(1rem, 2vw, 1.3rem)/1.55 Arial, Helvetica, sans-serif;
 }
 
+.answer-summary {
+    max-width: 60rem;
+    margin-top: 1.5rem;
+    padding: 1.25rem 1.5rem;
+    border: 4px solid var(--ink, #111111);
+    background: var(--hazard-yellow, #ffd600);
+    box-shadow: 7px 7px 0 var(--ink, #111111);
+    font: 700 1.05rem/1.6 Arial, Helvetica, sans-serif;
+}
+
 .about-section {
     padding-top: clamp(1.5rem, 4vw, 2.5rem);
     border-top: 5px solid var(--ink, #111111);
@@ -434,6 +444,29 @@
     padding: 1.4rem;
     border: 4px solid var(--ink, #111111);
     background: #ffad8f;
+}
+
+.faq-list {
+    display: grid;
+    gap: 1.25rem;
+}
+
+.faq-item {
+    padding: 1.4rem 1.5rem;
+    border: 4px solid var(--ink, #111111);
+    background: var(--paper, #fffdf5);
+    box-shadow: 7px 7px 0 var(--ink, #111111);
+}
+
+.faq-item h4 {
+    margin: 0 0 0.7rem;
+    font: 800 1.1rem/1.2 var(--body-font, 'Arial Black', Arial, Helvetica, sans-serif);
+    text-transform: uppercase;
+}
+
+.faq-item p {
+    margin: 0;
+    font: 700 1rem/1.6 Arial, Helvetica, sans-serif;
 }
 
 .sharing-workspace {

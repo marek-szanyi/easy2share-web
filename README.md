@@ -83,8 +83,7 @@ easy2share-web is designed to reduce credential reuse and unnecessary data trans
 
 > The web client shall always be loaded from a trusted source (HTTPS) and the QR code shall be scanned in person. The session key is never transmitted over the network.
 
-> The official trusted source for the webapp is https://getshared.link 
-
+> The official trusted source for the web app is https://getsharing.link
 
 ## Getting started
 

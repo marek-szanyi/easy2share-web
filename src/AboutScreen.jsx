@@ -8,6 +8,10 @@ export function AboutScreen() {
             <p>
                 With any device capable of running a web browser.
             </p>
+            <p className="answer-summary">
+                easy2share lets you securely copy your phone clipboard to a desktop browser and send files directly over
+                a local encrypted session—without cloud storage, accounts, or a relay service.
+            </p>
         </header>
 
         <section className="about-section" aria-labelledby="tutorial-title">
@@ -86,6 +90,33 @@ export function AboutScreen() {
                     Do not share the QR code with anyone and ensure that no one can photograph it while you are scanning it..
                 </p>
             </aside>
+        </section>
+
+        <section className="about-section faq-section" aria-labelledby="faq-title">
+            <h3 id="faq-title">Frequently asked questions</h3>
+            <div className="faq-list">
+                <article className="faq-item">
+                    <h4>What is easy2share?</h4>
+                    <p>easy2share is a secure local clipboard and file-sharing tool that connects a phone to a browser
+                        on another device without a cloud relay.</p>
+                </article>
+                <article className="faq-item">
+                    <h4>How does easy2share share data securely?</h4>
+                    <p>It creates a fresh key for each session, displays it as a QR code, and lets the phone scan it
+                        locally. The connection then uses authenticated encryption for clipboard and file transfer
+                        payloads.</p>
+                </article>
+                <article className="faq-item">
+                    <h4>Does easy2share store my clipboard or files?</h4>
+                    <p>No. The browser keeps the session key in session storage only, and the direct connection stays
+                        local between the participating devices. Data is not sent to a central server.</p>
+                </article>
+                <article className="faq-item">
+                    <h4>Can I use easy2share for files as well as text?</h4>
+                    <p>Yes. After the encrypted session is live, the mobile app can send clipboard text and files to the
+                        browser, where they are reassembled and downloaded as completed transfers.</p>
+                </article>
+            </div>
         </section>
     </article>)
 }
