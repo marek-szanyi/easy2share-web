@@ -330,76 +330,97 @@ function App() {
                     </div>)}
                 </header>
 
-                {currentScreen === 'privacy-policy' ? (<PrivacyPolicyScreen/>) : currentScreen === 'about' ? (<AboutScreen/>) : connectionStatus === 'connected' ? (
-                    <div className="sharing-workspace">
-                        <section className="clipboard-panel" aria-labelledby="clipboard-title">
-                            <h2 id="clipboard-title">Clipboard</h2>
-                            <textarea
-                                aria-label="Shared clipboard"
-                                placeholder="clipboard content will appear here"
-                                value={clipboardContent}
-                                onChange={(event) => setClipboardContent(event.target.value)}
-                            />
-                        </section>
-
-                        <section className="files-panel" aria-labelledby="shared-files-title">
-                            <h2 id="shared-files-title">Shared Files</h2>
-                            <ul className="shared-file-list">
-                                {sharedFiles.length === 0 ? (
-                                    <li className="empty-file-list">NO FILES SHARED YET</li>
-                                ) : (sharedFiles.map((file) => (
-                                    <li key={file.id} className="shared-file">
-                                        <span className="shared-file-name" title={file.name}>{file.name}</span>
-                                        {file.status === 'ready' ? (
-                                            <a
-                                                className="shared-file-download"
-                                                href={file.url}
-                                                download={file.name}
-                                            >
-                                                DOWNLOAD{file.size >= 0 ? ` · ${formatBytes(file.size)}` : ''}
-                                            </a>
-                                        ) : file.status === 'failed' ? (
-                                            <span className="shared-file-status" role="alert">
-                                                FAILED: {String(file.error).toUpperCase()}
-                                            </span>
-                                        ) : (
-                                            <span className="shared-file-status">
-                                                RECEIVING… {formatBytes(file.receivedBytes)}
-                                                {file.size > 0 ? ` / ${formatBytes(file.size)}` : ''}
-                                            </span>
-                                        )}
-                                    </li>
-                                )))}
+                {currentScreen === 'privacy-policy' ? (<PrivacyPolicyScreen/>) : currentScreen === 'about' ? (
+                    <AboutScreen/>) : (
+                    <>
+                        <section className="ai-overview" aria-labelledby="ai-overview-title">
+                            <p className="section-kicker">SECURE LOCAL SHARING</p>
+                            <h2 id="ai-overview-title">What is easy2share?</h2>
+                            <p>
+                                easy2share is a secure way to copy clipboard text or send files from a phone to a
+                                desktop browser with a direct local connection, no cloud relay, and no account required.
+                            </p>
+                            <ul>
+                                <li>Generate a fresh session key and scan it with the mobile app.</li>
+                                <li>Protect clipboard text and files with authenticated encryption.</li>
+                                <li>Keep the session local and remove it by resetting the app.</li>
                             </ul>
                         </section>
-                    </div>) : (<div className="connection-form">
-                    <label className="visually-hidden" htmlFor="mobile-address">
-                        Mobile address
-                    </label>
-                    <input
-                        ref={mobileAddressInputRef}
-                        id="mobile-address"
-                        name="mobile-address"
-                        type="text"
-                        inputMode="url"
-                        autoComplete="url"
-                        placeholder="ENTER ADDRESS SHOWN IN THE MOBILE APP"
-                        value={mobileAddress}
-                        onChange={(event) => setMobileAddress(event.target.value)}
-                        required
-                    />
-                    <button
-                        type="button"
-                        onClick={handleConnect}
-                        disabled={isGenerating || !mobileAddress.trim()}
-                        aria-busy={isGenerating}
-                    >
-                        {isGenerating ? 'GENERATING…' : 'CONNECT'}
-                    </button>
-                </div>)}
+                        {connectionStatus === 'connected' ? (
+                            <div className="sharing-workspace">
+                                <section className="clipboard-panel" aria-labelledby="clipboard-title">
+                                    <h2 id="clipboard-title">Clipboard</h2>
+                                    <textarea
+                                        aria-label="Shared clipboard"
+                                        placeholder="clipboard content will appear here"
+                                        value={clipboardContent}
+                                        onChange={(event) => setClipboardContent(event.target.value)}
+                                    />
+                                </section>
 
-                {currentScreen === 'app' && error && !qrCode && (
-                    <p className="error-message" role="alert">{error}</p>)}
+                                <section className="files-panel" aria-labelledby="shared-files-title">
+                                    <h2 id="shared-files-title">Shared Files</h2>
+                                    <ul className="shared-file-list">
+                                        {sharedFiles.length === 0 ? (
+                                            <li className="empty-file-list">NO FILES SHARED YET</li>
+                                        ) : (sharedFiles.map((file) => (
+                                            <li key={file.id} className="shared-file">
+                                                <span className="shared-file-name" title={file.name}>{file.name}</span>
+                                                {file.status === 'ready' ? (
+                                                    <a
+                                                        className="shared-file-download"
+                                                        href={file.url}
+                                                        download={file.name}
+                                                    >
+                                                        DOWNLOAD{file.size >= 0 ? ` · ${formatBytes(file.size)}` : ''}
+                                                    </a>
+                                                ) : file.status === 'failed' ? (
+                                                    <span className="shared-file-status" role="alert">
+                                                        FAILED: {String(file.error).toUpperCase()}
+                                                    </span>
+                                                ) : (
+                                                    <span className="shared-file-status">
+                                                        RECEIVING… {formatBytes(file.receivedBytes)}
+                                                        {file.size > 0 ? ` / ${formatBytes(file.size)}` : ''}
+                                                    </span>
+                                                )}
+                                            </li>
+                                        )))}
+                                    </ul>
+                                </section>
+                            </div>
+                        ) : (
+                            <div className="connection-form">
+                                <label className="visually-hidden" htmlFor="mobile-address">
+                                    Mobile address
+                                </label>
+                                <input
+                                    ref={mobileAddressInputRef}
+                                    id="mobile-address"
+                                    name="mobile-address"
+                                    type="text"
+                                    inputMode="url"
+                                    autoComplete="url"
+                                    placeholder="ENTER ADDRESS SHOWN IN THE MOBILE APP"
+                                    value={mobileAddress}
+                                    onChange={(event) => setMobileAddress(event.target.value)}
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    onClick={handleConnect}
+                                    disabled={isGenerating || !mobileAddress.trim()}
+                                    aria-busy={isGenerating}
+                                >
+                                    {isGenerating ? 'GENERATING…' : 'CONNECT'}
+                                </button>
+                            </div>
+                        )}
+
+                        {currentScreen === 'app' && error && !qrCode && (
+                            <p className="error-message" role="alert">{error}</p>)}
+                    </>
+                )}
             </section>
         </main>
 
