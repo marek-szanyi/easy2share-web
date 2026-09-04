@@ -12,9 +12,11 @@
   "dependencies": {
     "@noble/ciphers": "^2.2.0",
     "cbor-x": "^1.6.5",
+    "posthog-js": "^1.426.1",
     "qrcode": "^1.5.4",
     "react": "^19.2.7",
-    "react-dom": "^19.2.7"
+    "react-dom": "^19.2.7",
+    "@emnapi/runtime": "^1.11.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

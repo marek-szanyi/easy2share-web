@@ -12,6 +12,7 @@ import './App.css'
 import {AboutScreen} from "./AboutScreen.jsx";
 import {PrivacyPolicyScreen} from './PrivacyPolicyScreen.jsx'
 import {MarkGithubIcon} from '@primer/octicons-react'
+import posthog from './posthog.js'
 
 const SESSION_KEY = 'easy2share.chacha20-poly1305.key.v1'
 const CLIENT_NAME = 'easy2share-web'
@@ -87,6 +88,7 @@ function App() {
 
     function applyFileEvent(fileEvent) {
         if (fileEvent.status === 'started') {
+            posthog?.capture('file_transfer_started')
             setSharedFiles((files) => [
                 ...files,
                 {
@@ -103,12 +105,17 @@ function App() {
         }
 
         if (fileEvent.status === 'completed') {
+            posthog?.capture('file_transfer_completed', {byte_count: fileEvent.size})
             const url = URL.createObjectURL(fileEvent.blob)
             objectUrlsRef.current.push(url)
             setSharedFiles((files) => files.map((file) => (file.id === fileEvent.fileId
                 ? {...file, status: 'ready', size: fileEvent.size, receivedBytes: fileEvent.size, url}
                 : file)))
             return
+        }
+
+        if (fileEvent.status === 'failed') {
+            posthog?.capture('file_transfer_failed')
         }
 
         setSharedFiles((files) => files.map((file) => {
@@ -140,6 +147,7 @@ function App() {
             if (generation !== keyGenerationRef.current) return
 
             keyBytesRef.current = keyBytes
+            posthog?.capture('session_key_generated')
             sessionStorage.setItem(SESSION_KEY, key)
             setQrCode(qrDataUrl)
             dialogRef.current?.showModal()
@@ -175,6 +183,8 @@ function App() {
             return
         }
 
+        posthog?.capture('connection_attempted')
+
         try {
             const socket = new WebSocket(getWebSocketUrl(mobileAddress))
             socket.binaryType = 'arraybuffer'
@@ -197,10 +207,12 @@ function App() {
                     if (!hasConnected) {
                         if (response?.isOk === true) {
                             hasConnected = true
+                            posthog?.capture('connection_established')
                             setConnectionStatus('connected')
                             dialogRef.current?.close()
                         } else {
                             handshakeFailed = true
+                            posthog?.capture('connection_rejected')
                             setError(`MOBILE DEVICE REJECTED THE CONNECTION${response?.message ? `: ${String(response.message).toUpperCase()}` : '.'}`)
                             socket.close()
                             return
@@ -208,6 +220,7 @@ function App() {
                     }
 
                     if (response?.clipboard !== undefined) {
+                        posthog?.capture('clipboard_received')
                         setClipboardContent(response.clipboard)
                     }
 
@@ -220,6 +233,7 @@ function App() {
                     if (hasConnected) return
 
                     handshakeFailed = true
+                    posthog?.capture('connection_failed', {failure_stage: 'decryption'})
                     setError('COULD NOT DECRYPT SERVER RESPONSE. CHECK THE KEY AND TRY AGAIN.')
                     socket.close()
                 }
@@ -235,6 +249,7 @@ function App() {
                 } else {
                     setConnectionStatus('idle')
                     if (!handshakeFailed) {
+                        posthog?.capture('connection_failed', {failure_stage: 'socket'})
                         setError('COULD NOT CONNECT TO MOBILE DEVICE. TRY AGAIN.')
                     }
                 }
@@ -248,11 +263,13 @@ function App() {
         } catch {
             socketRef.current = null
             setConnectionStatus('idle')
+            posthog?.capture('connection_failed', {failure_stage: 'invalid_address'})
             setError('ENTER A VALID WEBSOCKET ADDRESS.')
         }
     }
 
     function handleCancel() {
+        posthog?.capture('connection_cancelled')
         setError('')
         setConnectionStatus('idle')
         dialogRef.current?.close()
@@ -260,6 +277,7 @@ function App() {
     }
 
     function handleReset() {
+        posthog?.capture('session_reset')
         keyGenerationRef.current += 1
         keyBytesRef.current = null
         sessionStorage.removeItem(SESSION_KEY)
