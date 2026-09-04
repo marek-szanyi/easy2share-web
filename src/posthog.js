@@ -8,6 +8,8 @@ if (!posthogKey || !posthogHost) {
     if (import.meta.env.DEV) {
         const missingVariable = !posthogKey ? 'VITE_POSTHOG_KEY' : 'VITE_POSTHOG_HOST'
         throw new Error(`${missingVariable} variable required by PostHog is missing or un-configured, this causes events to be silently missed. This error stops appearing once ${missingVariable} is configured`)
+    } else {
+        console.warn('PostHog is not configured, events will be silently missed. Configure VITE_POSTHOG_KEY and VITE_POSTHOG_HOST to enable PostHog tracking.')
     }
 } else {
     posthog.init(posthogKey, {
